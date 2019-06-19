@@ -25,6 +25,20 @@ module.exports = {
                 use: {
                     loader: 'vue-loader'
                 }
+            },
+            {
+                test: /\.scss|css$/,
+                use: [
+                	'style-loader',
+					{
+                        loader:'css-loader',
+						options:{
+                        	importLoaders:2 //在@import引入前 继续走前面2个loader处理器
+						}
+                    },
+					'sass-loader',
+					'postcss-loader'
+				]//css-loader会分析css文件之间的引用关系，然后style-loader会解析css-loader处理后的css文件  从数组末尾开始使用loader解析
             }
 		]
 	},
