@@ -33,7 +33,8 @@ module.exports = {
 					{
                         loader:'css-loader',
 						options:{
-                        	importLoaders:2 //在@import引入前 继续走前面2个loader处理器
+                        	importLoaders:2, //在@import引入前 继续走前面2个loader处理器
+							modules:true
 						}
                     },
 					'sass-loader',
