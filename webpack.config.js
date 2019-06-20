@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const webpack = require('webpack');
 module.exports = {
 	mode: 'development',
     //devlopment devtool:'cheap-module-eval-source-map'
@@ -12,7 +13,9 @@ module.exports = {
     devServer: {
 		contentBase:'./dist',
 		open:true,
-		port:8080
+		port:8080,
+		hot:true,
+		hotOnly:true
 	},
     module: {
 		rules: [
@@ -60,7 +63,8 @@ module.exports = {
 		new HtmlWebpackPlugin({
         template: "src/index.html"
     }),
-		new CleanWebpackPlugin()
+		new CleanWebpackPlugin(),
+		new webpack.HotModuleReplacementPlugin()
 	],
 	output: {
         publicPath: "/",
