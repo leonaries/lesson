@@ -3,9 +3,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 module.exports = {
 	mode: 'development',
-	entry: {
-		main: './src/index.js',
-        sub: './src/index.js',
+    //devlopment devtool:'cheap-module-eval-source-map'
+	//production devtool:'cheap-module-source-map'
+    devtool: "none",//sourcemap src与 dist 文件中的映射关系
+    entry: {
+		main: './src/index.js'
 	},
 	module: {
 		rules: [
@@ -56,7 +58,6 @@ module.exports = {
 		new CleanWebpackPlugin()
 	],
 	output: {
-        publicPath: "http://cdn.com.cn", //如果要把js文件放到cdn服务器上，就需要配置 路径
         filename: '[name].js',
 		path: path.resolve(__dirname, 'dist')
 	}
