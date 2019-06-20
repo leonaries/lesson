@@ -4,7 +4,8 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 module.exports = {
 	mode: 'development',
 	entry: {
-		main: './src/index.js'
+		main: './src/index.js',
+        sub: './src/index.js',
 	},
 	module: {
 		rules: [
@@ -55,7 +56,8 @@ module.exports = {
 		new CleanWebpackPlugin()
 	],
 	output: {
-		filename: 'bundle.js',
+        publicPath: "http://cdn.com.cn", //如果要把js文件放到cdn服务器上，就需要配置 路径
+        filename: '[name].js',
 		path: path.resolve(__dirname, 'dist')
 	}
 }
