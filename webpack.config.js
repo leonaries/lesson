@@ -9,7 +9,12 @@ module.exports = {
     entry: {
 		main: './src/index.js'
 	},
-	module: {
+    devServer: {
+		contentBase:'./dist',
+		open:true,
+		port:8080
+	},
+    module: {
 		rules: [
 			{
 			test: /\.jpg$/,
@@ -58,6 +63,7 @@ module.exports = {
 		new CleanWebpackPlugin()
 	],
 	output: {
+        publicPath: "/",
         filename: '[name].js',
 		path: path.resolve(__dirname, 'dist')
 	}
