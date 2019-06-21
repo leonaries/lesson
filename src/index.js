@@ -1,8 +1,5 @@
-const arr = [
-    new Promise(() => {}),
-    new Promise(() => {})
-];
+//Tree Shaking 只支持ES module（静态导出方式）
 
-arr.map(item => {
-    console.log(item);
-});
+import { add } from './math.js'
+
+add(1,2);

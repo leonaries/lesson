@@ -3,10 +3,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
 module.exports = {
-	mode: 'development',
+	mode: 'production',
     //devlopment devtool:'cheap-module-eval-source-map'
 	//production devtool:'cheap-module-source-map'
-    devtool: "none",//sourcemap src与 dist 文件中的映射关系
+    devtool: "cheap-module-source-map",//sourcemap src与 dist 文件中的映射关系
     entry: {
 		main: './src/index.js'
 	},
@@ -23,34 +23,34 @@ module.exports = {
 				test:/\.js$/,
 				exclude:/node_modules/,
 				loader:'babel-loader',
-				options:{
-					//业务代码时配置 polifill 会污染全局环境
-					// presets:[
-					// 	["@babel/preset-env",
-					// 		{
-					// 			useBuiltIns:'usage',
-                    //             targets: {
-                    //                 edge: "17",
-                    //                 firefox: "60",
-                    //                 chrome: "67",
-                    //                 safari: "11.1",
-                    //             },}
-                    //      ]
-					// ]
-					//编写类库时  利用闭包避免污染全局变量
-					"plugins":[
-						[
-							"@babel/plugin-transform-runtime",
-                            {
-                                "absoluteRuntime": false,
-                                "corejs": 2,
-                                "helpers": true,
-                                "regenerator": true,
-                                "useESModules": false
-                            }
-						]
-					]
-				}
+				// options:{
+				// 	//业务代码时配置 polifill 会污染全局环境
+				// 	presets:[
+				// 		["@babel/preset-env",
+				// 			{
+				// 				useBuiltIns:'usage',
+                //                 targets: {
+                //                     edge: "17",
+                //                     firefox: "60",
+                //                     chrome: "67",
+                //                     safari: "11.1",
+                //                 },}
+                //          ]
+				// 	]
+				// 	//编写类库时  利用闭包避免污染全局变量
+				// 	// "plugins":[
+				// 	// 	[
+				// 	// 		"@babel/plugin-transform-runtime",
+                //     //         {
+                //     //             "absoluteRuntime": false,
+                //     //             "corejs": 2,
+                //     //             "helpers": true,
+                //     //             "regenerator": true,
+                //     //             "useESModules": false
+                //     //         }
+				// 	// 	]
+				// 	// ]
+				// }
 			},
 			{
 				test: /\.jpg$/,
@@ -99,8 +99,17 @@ module.exports = {
 		new CleanWebpackPlugin(),
 		new webpack.HotModuleReplacementPlugin()
 	],
-	output: {
-        publicPath: "/",
+    // tree shaking 忽略了@babel/polly-fill 等没有导出的模块 是直接挂在到window对向上的,还有import 引入的css文件
+	//此时需要在package.json 中去配置
+	// sideEffects：[
+    //     "*.css",
+    //     "@babel/polly-fill"
+    //   ],
+    // optimization: {
+    //     usedExports: true //导出的模块被引用时才进行打包
+    // },
+    output: {
+        publicPath: "./",
         filename: '[name].js',
 		path: path.resolve(__dirname, 'dist')
 	}
