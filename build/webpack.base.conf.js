@@ -4,7 +4,6 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 module.exports = {
     entry: {
-        // lodash:'./src/lodash.js',
         main: './src/index.js'
     },
     module: {
@@ -13,34 +12,6 @@ module.exports = {
                 test:/\.js$/,
                 exclude:/node_modules/,
                 loader:'babel-loader',
-                // options:{
-                // 	//业务代码时配置 polifill 会污染全局环境
-                // 	presets:[
-                // 		["@babel/preset-env",
-                // 			{
-                // 				useBuiltIns:'usage',
-                //                 targets: {
-                //                     edge: "17",
-                //                     firefox: "60",
-                //                     chrome: "67",
-                //                     safari: "11.1",
-                //                 },}
-                //          ]
-                // 	]
-                // 	//编写类库时  利用闭包避免污染全局变量
-                // 	// "plugins":[
-                // 	// 	[
-                // 	// 		"@babel/plugin-transform-runtime",
-                //     //         {
-                //     //             "absoluteRuntime": false,
-                //     //             "corejs": 2,
-                //     //             "helpers": true,
-                //     //             "regenerator": true,
-                //     //             "useESModules": false
-                //     //         }
-                // 	// 	]
-                // 	// ]
-                // }
             },
             {
                 test: /\.jpg$/,
@@ -92,25 +63,7 @@ module.exports = {
     ],
     optimization: {
         splitChunks: {
-            chunks: "all",
-            minSize: 30000,
-            minChunks: 1,
-            maxAsyncRequests: 5,
-            maxInitialRequests: 3,
-            automaticNameDelimiter: '~',
-            name: true,
-            cacheGroups: {
-                vendors:{
-                    test: /[\\/]node_modules[\\/]/,
-                    priority: -10,
-                    // name:'vendors.js'
-                },
-                default: {
-                    priority: -20,
-                    reuseExistingChunk: true,
-                    name:'common.js'
-                }
-            }
+            chunks: "all"
         }
     },
     output: {

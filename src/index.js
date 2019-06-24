@@ -1,15 +1,8 @@
-/*
-import _ from  'lodash'
-//code splitting
-console.log(_.join(['a','d','c'],'*'));
-console.log(_.join(['a','b','c'],'*'));*/
-
-import _ from  'lodash'
-import jquery from  'jquery'
-
-var element = document.createElement('div');
-element.innerHTML = _.join(['leon','aries'],'-');
-document.body.appendChild(element);
+// import _ from  'lodash'
+//
+// var element = document.createElement('div');
+// element.innerHTML = _.join(['leon','aries'],'-');
+// document.body.appendChild(element);
 
 
 // function getComponent() {
@@ -19,10 +12,21 @@ document.body.appendChild(element);
 //         return element;
 //     })
 // }
-//
-// getComponent().then(element => {
-//     document.body.appendChild(element)
-// });
+
+async function getComponent() {
+    const { default : _ } = await import(/*webpackChunkName:'lodash'*/'lodash');
+    const element = document.createElement('div');
+    element.innerHTML = _.join(['leon','aries'],'-');
+    return element;
+}
+
+document.addEventListener('click', () =>{
+    getComponent().then(element => {
+        document.body.appendChild(element)
+    });
+});
+
+
 
 
 //代码分割，和webpack无关
