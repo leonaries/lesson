@@ -1,5 +1,4 @@
 const webpack = require('webpack');
-const merge = require('webpack-merge');
 const baseConfig = require('./webpack.base.conf');
 const devConfig = {
 	mode: 'development',
@@ -35,6 +34,10 @@ const devConfig = {
 	plugins:[
 		new webpack.HotModuleReplacementPlugin()
 	],
+    output:{
+        filename: '[name].js',
+        chunkFilename: "[name].chunk.js"
+    }
     // tree shaking 忽略了@babel/polly-fill 等没有导出的模块 是直接挂在到window对向上的,还有import 引入的css文件
 	//此时需要在package.json 中去配置
 	// sideEffects：[
@@ -47,4 +50,4 @@ const devConfig = {
 
 }
 
-module.exports = merge( baseConfig, devConfig );
+module.exports = devConfig;

@@ -1,13 +1,12 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const merge = require('webpack-merge');
 const baseConfig = require('./webpack.base.conf');
 
 const prodConfig = {
     mode: 'production',
     //devlopment devtool:'cheap-module-eval-source-map'
     //production devtool:'cheap-module-source-map'
-    devtool: "cheap-module-source-map",//sourcemap src与 dist 文件中的映射关系
+    // devtool: "cheap-module-source-map",//sourcemap src与 dist 文件中的映射关系
     module:{
         rules:[
             {
@@ -40,4 +39,4 @@ const prodConfig = {
     ]
 };
 
-module.exports = merge(baseConfig , prodConfig);
+module.exports = prodConfig;

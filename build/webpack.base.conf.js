@@ -1,8 +1,11 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-
-module.exports = {
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const devConfig = require('./webpack.dev.conf');
+const prodConfig = require('./webpack.prod.conf');
+const baseConfig = {
     entry: {
         main: './src/index.js'
     },
@@ -11,7 +14,14 @@ module.exports = {
             {
                 test:/\.js$/,
                 exclude:/node_modules/,
-                loader:'babel-loader',
+                use:[
+                    {
+                        loader:'babel-loader'
+                    },
+                    {
+                        loader: "imports-loader?this=>window"
+                    }
+                ]
             },
             {
                 test: /\.jpg$/,
@@ -45,16 +55,39 @@ module.exports = {
         new CleanWebpackPlugin({
             root:path.resolve(__dirname, '../dist'),
         }),
+        new webpack.ProvidePlugin({
+            $:'jquery'
+        })
     ],
     optimization: {
+        runtimeChunk: {
+            name:'runtime'
+        },
         usedExports: true,
         splitChunks: {
-            chunks: "all"
+            chunks: "all",
+            cacheGroups: {
+                vendors:{
+                    test:/[\\/]node_modules[\\/]/,
+                    priority:-10,
+                    name:'vendors'
+                }
+            }
         }
     },
+    performance: false,
     output: {
-        filename: '[name].js',
-        chunkFilename: "[name].chunk.js",
+        filename: '[name].[contenthash].js',
+        chunkFilename: "[name].[contenthash].js",
         path: path.resolve(__dirname, '../dist')
     }
 };
+
+module.exports = (env) => {
+    console.log(env);
+    if(env && env.production) {
+        return merge(baseConfig , prodConfig)
+    }else {
+        return merge(baseConfig , devConfig)
+    }
+}
