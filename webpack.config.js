@@ -1,93 +1,107 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
-
 module.exports = {
 	mode: 'development',
-	devtool: 'cheap-module-eval-source-map',
-	entry: {
+    //devlopment devtool:'cheap-module-eval-source-map'
+	//production devtool:'cheap-module-source-map'
+    devtool: "none",//sourcemap src与 dist 文件中的映射关系
+    entry: {
 		main: './src/index.js'
 	},
-	devServer: {
-		contentBase: './dist',
-		open: true,
-		port: 8080,
-		hot: true,
-		hotOnly: true,
-		historyApiFallback:true,
-		proxy:{
-			'/react/api':{
-				target:'http://www.dell-lee.com',
-				pathRewrite:{
-					'header.json':'demo.json'
-				},
-				changeOrigin:true,
-				// headers:{
-				// 	host:'',
-				// 	cookie:''
-				// }
-			}
-		}
+    devServer: {
+		contentBase:'./dist',
+		open:true,
+		port:8080,
+		hot:true,
+		hotOnly:true
 	},
-	module: {
-		rules: [{
-			test: /\.js$/,
-			exclude: /node_modules/,
-			use:['babel-loader',
-				{
-                    loader: 'eslint-loader',
-					options:{
-                    	fix:true
-					}
-                }
-				],
-		}, {
-			test: /\.(jpg|png|gif)$/,
-			use: {
-				loader: 'url-loader',
-				options: {
-					name: '[name]_[hash].[ext]',
-					outputPath: 'images/',
-					limit: 10240
+    module: {
+		rules: [
+			{
+				test:/\.js$/,
+				exclude:/node_modules/,
+				loader:'babel-loader',
+				options:{
+					//业务代码时配置 polifill 会污染全局环境
+					// presets:[
+					// 	["@babel/preset-env",
+					// 		{
+					// 			useBuiltIns:'usage',
+                    //             targets: {
+                    //                 edge: "17",
+                    //                 firefox: "60",
+                    //                 chrome: "67",
+                    //                 safari: "11.1",
+                    //             },}
+                    //      ]
+					// ]
+					//编写类库时  利用闭包避免污染全局变量
+					"plugins":[
+						[
+							"@babel/plugin-transform-runtime",
+                            {
+                                "absoluteRuntime": false,
+                                "corejs": 2,
+                                "helpers": true,
+                                "regenerator": true,
+                                "useESModules": false
+                            }
+						]
+					]
 				}
-			}
-		}, {
-			test: /\.(eot|ttf|svg)$/,
-			use: {
-				loader: 'file-loader'
-			}
-		}, {
-			test: /\.scss$/,
-			use: [
-				'style-loader',
-				{
-					loader: 'css-loader',
-					options: {
-						importLoaders: 2
+			},
+			{
+				test: /\.jpg$/,
+				use: {
+						loader: 'url-loader',
+						options:{
+							//placeholder 占位符
+							name:'[name].[ext]',
+							outputPath:'images/',
+							limit:2048 //图片大小 超过这个值时会被打包到images目录下，否则会以base64的格式打包到bundle.js中 单位b
+						}
+
 					}
-				},
-				'sass-loader',
-				'postcss-loader'
-			]
-		}, {
-			test: /\.css$/,
-			use: [
-				'style-loader',
-				'css-loader',
-				'postcss-loader'
-			]
-		}]
+			},
+            {
+                test: /\.vue$/,
+                use: {
+                    loader: 'vue-loader'
+                }
+            },
+            {
+                test: /\.scss|css$/,
+                use: [
+                	'style-loader',
+					{
+                        loader:'css-loader',
+						options:{
+                        	importLoaders:2, //在@import引入前 继续走前面2个loader处理器
+							modules:false
+						}
+                    },
+					'sass-loader',
+					'postcss-loader'
+				]//css-loader会分析css文件之间的引用关系，然后style-loader会解析css-loader处理后的css文件  从数组末尾开始使用loader解析
+            },
+            {
+                test: /\.(svg|eot|ttf|woff)(\?.*)?$/,
+                loader: 'file-loader',
+            }
+		]
 	},
-	plugins: [
+	plugins:[
 		new HtmlWebpackPlugin({
-			template: 'src/index.html'
-		}),
-		new CleanWebpackPlugin(['dist']),
+        template: "src/index.html"
+    }),
+		new CleanWebpackPlugin(),
 		new webpack.HotModuleReplacementPlugin()
 	],
 	output: {
-		filename: '[name].js',
+        publicPath: "/",
+        filename: '[name].js',
 		path: path.resolve(__dirname, 'dist')
 	}
 }

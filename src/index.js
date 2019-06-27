@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
-import axios from  'axios';
+import Child from './child/child'
+
 class App extends Component {
-
-	componentDidMount() {
-		axios.get('/react/api/header.json').then((res) => {
-			console.log(res);
-		})
-    }
-
     render() {
-		return <div>Hello World</div>
-	}
+        return (
+            <div>
+                <div>
+                    This is App
+                </div>
+            </div>
+        )
+    }
 }
 
-ReactDom.render(<App />, document.getElementById('root'));
+
+ReactDom.render(<App/>, document.getElementById('root'));
