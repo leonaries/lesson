@@ -34,7 +34,14 @@ module.exports = {
 		rules: [{
 			test: /\.js$/,
 			exclude: /node_modules/,
-			loader: 'babel-loader',
+			use:['babel-loader',
+				{
+                    loader: 'eslint-loader',
+					options:{
+                    	fix:true
+					}
+                }
+				],
 		}, {
 			test: /\.(jpg|png|gif)$/,
 			use: {
